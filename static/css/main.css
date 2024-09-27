@@ -2,3 +2,23 @@ body,
 p {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+.text-center {
+  text-align: center;
+}
+
+input {
+  padding: 5px;
+  margin: 5px;
+}
+
+input.large {
+  width: 80%;
+}
+
+div.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
