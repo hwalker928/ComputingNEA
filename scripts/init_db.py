@@ -1,7 +1,4 @@
 import sqlite3
-import os
-
-os.chdir('..')
 
 # Connect to the database
 connection = sqlite3.connect("data/database.db")
