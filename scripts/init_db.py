@@ -1,12 +1,15 @@
 import sqlite3
 
-# Connect to the database
 connection = sqlite3.connect("data/database.db")
 
-with open("schema.sql") as f:
-    connection.executescript(f.read())
+def init():
+    with open("schema.sql") as f:
+        connection.executescript(f.read())
 
-cur = connection.cursor()
+    connection.commit()
+    connection.close()
 
-connection.commit()
-connection.close()
+if __name__ == "__main__":
+    print("Running database initialization")
+    init()
+    print("Database initialization complete")
