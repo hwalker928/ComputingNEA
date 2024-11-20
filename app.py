@@ -18,7 +18,7 @@ def setupKey():
         app.secret_key = secrets.token_urlsafe(16)
         return redirect("/")
 
-    return render_template("setup.html")
+    return render_template("setup-key.html")
 
 
 @app.route("/login")
