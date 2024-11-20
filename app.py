@@ -1,5 +1,7 @@
 from flask import Flask, render_template, redirect, request
 import secrets
+import multiprocessing
+import webview
 
 app = Flask(__name__)
 
@@ -25,7 +27,12 @@ def setupKey():
 def login_page():
     return render_template("login.html")
 
+def start_webview():
+    webview.create_window('Password Manager', app)
+    webview.start()
 
 if __name__ == "__main__":
-    # TODO: reset this to False before deploying
-    app.run(debug=True)
+    webview_process = multiprocessing.Process(target=start_webview)
+    webview_process.start()
+
+    app.run(debug=True, use_reloader=False)
