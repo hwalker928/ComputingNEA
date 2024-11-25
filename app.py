@@ -1,14 +1,15 @@
 from flask import Flask, render_template, redirect, request
-import secrets
 import multiprocessing
 import webview
+import hashing
+import os
 
 app = Flask(__name__)
 
 
 @app.route("/")
 def root():
-    if app.secret_key is None:
+    if not os.path.isfile("keys/private.key") or not os.path.isfile("keys/public.key"):
         return redirect("/setup-key")
 
     # TODO: check if the user is logged in before redirecting to login page
@@ -18,7 +19,14 @@ def root():
 @app.route("/setup-key", methods=["GET", "POST"])
 def setupKey():
     if request.method == "POST":
-        app.secret_key = secrets.token_urlsafe(16)
+        password = request.form.get("password")
+
+        kp = hashing.KeyPair()
+
+        kp.set_private_key_password(password)
+        kp.generate_key_pair()
+        kp.save_keys_to_files()
+
         return redirect("/")
 
     return render_template("setup-key.html")
