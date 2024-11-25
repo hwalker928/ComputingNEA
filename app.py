@@ -14,9 +14,10 @@ def root():
     # TODO: check if the user is logged in before redirecting to login page
     return redirect("/login")
 
-@app.route("/setup-key", methods=['GET', 'POST'])
+
+@app.route("/setup-key", methods=["GET", "POST"])
 def setupKey():
-    if request.method == 'POST':
+    if request.method == "POST":
         app.secret_key = secrets.token_urlsafe(16)
         return redirect("/")
 
@@ -27,9 +28,11 @@ def setupKey():
 def login_page():
     return render_template("login.html")
 
+
 def start_webview():
-    webview.create_window('Password Manager', app)
+    webview.create_window("Password Manager", app)
     webview.start()
+
 
 if __name__ == "__main__":
     webview_process = multiprocessing.Process(target=start_webview)

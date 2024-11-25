@@ -1,5 +1,6 @@
 import sqlite3, os
 
+
 def reset():
     os.remove("data/database.db")
 
@@ -10,6 +11,7 @@ def reset():
 
     connection.commit()
     connection.close()
+
 
 if __name__ == "__main__":
     print("Running database reset")
