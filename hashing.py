@@ -43,6 +43,22 @@ class KeyPair:
 
         return self
 
+    def load_existing_key_pair(self, password: str) -> bool:
+        log.debug("Loading existing key pair")
+
+        try:
+            with open("keys/private.key", "rb") as content_file:
+                self.__private_key = RSA.import_key(
+                    content_file.read(), passphrase=password
+                )
+            with open("keys/public.key", "rb") as content_file:
+                self.__public_key = RSA.import_key(content_file.read())
+        except Exception as e:
+            # TODO: make this return an actual error instead of a bool
+            return False
+
+        return True
+
     def save_keys_to_files(self) -> None:
         os.makedirs("keys", exist_ok=True)
 

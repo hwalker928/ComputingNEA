@@ -1,19 +1,23 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div class="container">
-    <div class="text-center">
-        <h1 style="margin: 0;">Password Manager</h1>
-        <p>Status: <span style="font-weight: bold;">Locked</span> 🔒</p>
+  <div class="text-center">
+    <h1 style="margin: 0">Password Manager</h1>
+    <p>Status: <span style="font-weight: bold">Locked</span> 🔒</p>
 
-        <form action="{{ url_for('login_page') }}" method="post" style="margin-top: 1rem;">
-            <label for="encryptionkey">Encryption Master Key:</label>
-            <br />
-            <input type="password" id="encryptionkey" name="encryptionkey" required class="large">
+    <form method="post" style="margin-top: 1rem">
+      <label for="password">Encryption Master Key:</label>
+      <br />
+      <input
+        type="password"
+        id="password"
+        name="password"
+        required
+        class="large"
+      />
 
-            <br />
-            <input type="submit" value="Validate" style="margin-top: 1rem;">
-        </form>
-    </div>
+      <br />
+      <input type="submit" value="Validate" style="margin-top: 1rem" />
+    </form>
+  </div>
 </div>
 {% endblock %}
