@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request, session
 import multiprocessing
 import webview
-import hashing
+import encryption
 import os
 import secrets
 
@@ -29,7 +29,7 @@ def setupKey():
         password = request.form.get("password")
 
         # TODO: implement password validation
-        kp = hashing.KeyPair()
+        kp = encryption.KeyPair()
 
         kp.set_private_key_password(password)
         kp.generate_key_pair()
@@ -46,7 +46,7 @@ def login_page():
         password = request.form.get("password")
 
         # Check if the password is correct by trying to load the key pair with the password
-        kp = hashing.KeyPair()
+        kp = encryption.KeyPair()
         if kp.load_existing_key_pair(password):
             session["private_key_password"] = password
             return redirect("/")

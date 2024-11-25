@@ -1,7 +1,10 @@
 from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
 from typing import Self
 import log
 import os
+from base64 import b64encode
+from base64 import b64decode
 
 
 class KeyPair:
@@ -11,6 +14,22 @@ class KeyPair:
         self.__public_key = None
         self.__private_key = None
         self.__private_key_password = ""
+
+    def get_public_key_instance(self) -> RSA.RsaKey:
+        log.debug("Getting public key instance")
+
+        if self.__public_key is None:
+            raise Exception("Public key does not exist")
+
+        return self.__public_key
+
+    def get_private_key_instance(self) -> RSA.RsaKey:
+        log.debug("Getting private key instance")
+
+        if self.__private_key is None:
+            raise Exception("Private key does not exist")
+
+        return self.__private_key
 
     def generate_private_key(self) -> RSA.RsaKey:
         log.debug("Generating private key")
@@ -75,3 +94,37 @@ class KeyPair:
             log.debug("Saving public key to file")
 
             content_file.write(self.__public_key.exportKey("OpenSSH"))
+
+
+class Encryption:
+    def __init__(self, key_pair: KeyPair):
+        log.debug("Encryption object created")
+
+        self.__public_key = key_pair.get_public_key_instance()
+        self.__private_key = key_pair.get_private_key_instance()
+
+    def encrypt(self, message: str | bytes) -> bytes:
+        log.debug("Encrypting message")
+
+        if self.__public_key is None:
+            raise Exception("Public key does not exist")
+
+        if type(message) == str:
+            message = message.encode()
+
+        cipher_rsa = PKCS1_OAEP.new(self.__public_key)
+
+        return cipher_rsa.encrypt(message)
+
+    def decrypt(self, message: bytes) -> bytes:
+        log.debug("Decrypting message")
+
+        if self.__private_key is None:
+            raise Exception("Private key does not exist")
+
+        cipher_rsa = PKCS1_OAEP.new(self.__private_key)
+
+        return cipher_rsa.decrypt(message)
+
+    def b_to_str(self, message: bytes) -> str:
+        return b64encode(message).decode()
