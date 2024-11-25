@@ -28,6 +28,7 @@ def setupKey():
     if request.method == "POST":
         password = request.form.get("password")
 
+        # TODO: implement password validation
         kp = hashing.KeyPair()
 
         kp.set_private_key_password(password)
@@ -53,6 +54,11 @@ def login_page():
             return redirect("/login")
 
     return render_template("login.html")
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template("500.html", error=error), 500
 
 
 def start_webview():

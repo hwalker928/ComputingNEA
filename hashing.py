@@ -22,7 +22,9 @@ class KeyPair:
     def generate_public_key(self) -> RSA.RsaKey:
         log.debug("Generating public key")
 
-        # TODO: check if __private_key is None
+        if self.__private_key is None:
+            raise Exception("Private key does not exist")
+
         self.__public_key = self.__private_key.publickey()
 
         return self.__public_key
@@ -53,9 +55,10 @@ class KeyPair:
                 )
             with open("keys/public.key", "rb") as content_file:
                 self.__public_key = RSA.import_key(content_file.read())
-        except Exception as e:
-            # TODO: make this return an actual error instead of a bool
+        except ValueError:
             return False
+        except Exception as e:
+            raise e
 
         return True
 
