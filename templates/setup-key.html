@@ -13,6 +13,13 @@
 
             <br />
             <input type="submit" value="Validate" style="margin-top: 1rem;">
+
+            {% with errors = get_flashed_messages(category_filter=["error"]) %}
+            {% for error in errors %}
+            <p id="error" style="color: red">{{ error }}</p>
+            {% endfor %}
+            {% endwith %}
+
         </form>
     </div>
     <div class="text-center" style="margin-left: 1rem;">

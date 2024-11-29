@@ -1,7 +1,8 @@
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session, flash
 import multiprocessing
 import webview
 import encryption
+import validation
 import os
 import secrets
 
@@ -28,7 +29,11 @@ def setupKey():
     if request.method == "POST":
         password = request.form.get("password")
 
-        # TODO: implement password validation
+        valid, error = validation.check_valid_private_key_password(password)
+        if not valid:
+            flash(error, "error")
+            return redirect("/setup-key")
+        
         kp = encryption.KeyPair()
 
         kp.set_private_key_password(password)
@@ -62,7 +67,7 @@ def internal_error(error):
 
 
 def start_webview():
-    webview.create_window("Password Manager", app)
+    webview.create_window("Password Manager", app, confirm_close=True)
     webview.start()
 
 
