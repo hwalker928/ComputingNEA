@@ -8,12 +8,15 @@ class TestEncryption(unittest.TestCase):
         """Test that an encrypted message can be decrypted."""
         message = "This is a test message."
 
+        # Generate a keypair
         keypair = KeyPair()
         keypair.generate_key_pair()
 
+        # Encrypt the message
         encryption_instance = Encryption(keypair)
         encrypted_data = encryption_instance.encrypt(message)
 
+        # Decrypt the message and compare it to the original message
         self.assertEqual(
             encryption_instance.decrypt(encrypted_data).decode(),
             message,
@@ -23,12 +26,15 @@ class TestEncryption(unittest.TestCase):
         """Test that an encrypted message is not the same as the original message."""
         message = "This is a test message."
 
+        # Generate a keypair
         keypair = KeyPair()
         keypair.generate_key_pair()
 
+        # Encrypt the message
         encryption_instance = Encryption(keypair)
         encrypted_data = encryption_instance.encrypt(message)
 
+        # Compare the encrypted message to the original message
         self.assertNotEqual(
             encrypted_data,
             message.encode(),
