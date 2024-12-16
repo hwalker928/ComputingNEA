@@ -51,18 +51,24 @@ def setupKey():
 
 @app.route("/login", methods=["GET", "POST"])
 def login_page():
-    if request.method == "POST":
-        password = request.form.get("password")
+    if request.method == "GET":
+        return render_template("login.html")
 
-        # Check if the password is correct by trying to load the key pair with the password
-        kp = encryption.KeyPair()
-        if kp.load_existing_key_pair(password):
-            session["private_key_password"] = password
-            return redirect("/")
-        else:
-            return redirect("/login")
+    # Get the password from the form
+    password = request.form.get("password")
 
-    return render_template("login.html")
+    # Check if the password is correct by trying to load the key pair with the password
+    kp = encryption.KeyPair()
+    if kp.load_existing_key_pair(password):
+        # Password is valid
+        session["private_key_password"] = password
+        return redirect("/")
+    
+    # Password is invalid, return an error
+    flash("Invalid password", "error")
+    return redirect("/login")
+
+    
 
 
 @app.errorhandler(500)

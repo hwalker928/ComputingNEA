@@ -7,16 +7,18 @@
     <form method="post" style="margin-top: 1rem">
       <label for="password">Encryption Master Key:</label>
       <br />
-      <input
-        type="password"
-        id="password"
-        name="password"
-        required
-        class="large"
-      />
+      <input type="password" id="password" name="password" required class="large" />
+
+      {% with errors = get_flashed_messages(category_filter=["error"]) %}
+      {% for error in errors %}
+      <p id="error" style="color: red">{{ error }}</p>
+      {% endfor %}
+      {% endwith %}
 
       <br />
       <input type="submit" value="Validate" style="margin-top: 1rem" />
+
+
     </form>
   </div>
 </div>
