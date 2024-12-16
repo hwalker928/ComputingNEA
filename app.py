@@ -54,6 +54,11 @@ def login_page():
     if request.method == "GET":
         return render_template("login.html")
 
+    if session.get("login_attempts", 0) == -1:
+        flash("Too many login attempts, please try again later", "error")
+
+        return redirect("/login")
+
     # Get the password from the form
     password = request.form.get("password")
 
@@ -64,11 +69,20 @@ def login_page():
         session["private_key_password"] = password
         return redirect("/")
     
-    # Password is invalid, return an error
-    flash("Invalid password", "error")
-    return redirect("/login")
+    # Increase the login attempts counter
+    session["login_attempts"] = session.get("login_attempts", 0) + 1
 
+    if session.get("login_attempts") == 3:
+        # Too many login attempts, lock the user out
+        session["login_attempts"] = -1
+        flash("Too many login attempts, please try again later", "error")
+
+        return redirect("/login")
+
+    # Password is invalid, return an error
+    flash(f"Invalid password, attempt {session.get("login_attempts")}/3", "error")
     
+    return redirect("/login")
 
 
 @app.errorhandler(500)
