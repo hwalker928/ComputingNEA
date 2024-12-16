@@ -32,7 +32,7 @@ def setupKey():
         if not valid:
             flash(error, "error")
             return redirect("/setup-key")
-        
+
         kp = encryption.KeyPair()
 
         kp.set_private_key_password(password)
