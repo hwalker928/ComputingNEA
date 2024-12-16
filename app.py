@@ -1,8 +1,7 @@
 from flask import Flask, render_template, redirect, request, session, flash
 import multiprocessing
 import webview
-import encryption
-import validation
+from utils import encryption, validation
 import os
 import secrets
 
