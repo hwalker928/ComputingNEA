@@ -66,7 +66,7 @@ def setupName2():
 
     # Check if the name passes validation
     # TODO: this
-    valid, error = validation.check_valid_private_key_password(password)
+    valid, error = validation.check_valid_private_key_password(name)
     if not valid:
         # Return an error to the user if the name input is invalid
         flash(error, "error")
