@@ -2,7 +2,12 @@ import sqlite3, os
 
 
 def reset():
-    os.remove("data/database.db")
+    if os.path.exists("data/database.db"):
+        os.remove("data/database.db")
+    if os.path.exists("keys/private.key"):
+        os.remove("keys/private.key")
+    if os.path.exists("keys/public.key"):
+        os.remove("keys/public.key")
 
     connection = sqlite3.connect("data/database.db")
 

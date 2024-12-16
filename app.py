@@ -12,11 +12,6 @@ app.secret_key = secrets.token_urlsafe(16)
 # Initialize the database
 database = database.Database("data/database.db")
 
-log.debug(database.set_user_detail("name", "Harry"))
-log.debug(database.get_user_detail("name"))
-
-
-
 @app.route("/")
 def root():
     # Check if the keys are generated
@@ -27,7 +22,7 @@ def root():
     if not "private_key_password" in session:
         return redirect("/login")
 
-    return render_template("index.html")
+    return render_template("index.html", name=database.get_user_detail("name"))
 
 
 @app.route("/setup-key", methods=["GET", "POST"])
@@ -66,7 +61,8 @@ def setupName2():
 
     # Check if the name passes validation
     # TODO: this
-    valid, error = validation.check_valid_private_key_password(name)
+    #valid, error = validation.check_valid_private_key_password(name)
+    valid, error = True, None
     if not valid:
         # Return an error to the user if the name input is invalid
         flash(error, "error")
