@@ -1,5 +1,5 @@
 CREATE TABLE `credentials` (
-	`id` INTEGER AUTO_INCREMENT NOT NULL UNIQUE,
+	`id` INTEGER PRIMARY KEY,
 	`last_used_at` DATETIME,
 	`name` TEXT(65535) NOT NULL,
 	`username` TEXT(65535),
@@ -8,36 +8,31 @@ CREATE TABLE `credentials` (
 	`two_factor_id` INTEGER,
 	`created_at` DATETIME NOT NULL,
 	`updated_at` DATETIME NOT NULL,
-	`tag_id` INTEGER,
-	PRIMARY KEY(`id`)
+	`tag_id` INTEGER
 );
 
 CREATE TABLE `user_details` (
-	`id` INTEGER AUTO_INCREMENT NOT NULL UNIQUE,
+	`id` INTEGER PRIMARY KEY,
 	`key` TEXT(65535) NOT NULL,
-	`value` TEXT(65535) NOT NULL,
-	PRIMARY KEY(`id`)
+	`value` TEXT(65535) NOT NULL
 );
 
 
 CREATE TABLE `generated_passwords` (
-	`id` INTEGER AUTO_INCREMENT NOT NULL UNIQUE,
+	`id` INTEGER PRIMARY KEY,
 	`password` TEXT(65535) NOT NULL,
-	`generated_at` DATETIME NOT NULL,
-	PRIMARY KEY(`id`)
+	`generated_at` DATETIME NOT NULL
 );
 
 
 CREATE TABLE `tags` (
-	`id` INTEGER AUTO_INCREMENT NOT NULL UNIQUE,
+	`id` INTEGER PRIMARY KEY,
 	`name` TEXT(64) NOT NULL,
-	`colour` TEXT(6),
-	PRIMARY KEY(`id`)
+	`colour` TEXT(6)
 );
 
 
 CREATE TABLE `two_factor` (
-	`id` INTEGER AUTO_INCREMENT NOT NULL UNIQUE,
-	`token` TEXT(65535) NOT NULL,
-	PRIMARY KEY(`id`)
+	`id` INTEGER PRIMARY KEY,
+	`token` TEXT(65535) NOT NULL
 );

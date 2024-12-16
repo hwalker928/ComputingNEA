@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request, session, flash
 import multiprocessing
 import webview
-from utils import encryption, validation, database
+from utils import encryption, validation, database, log
 import os
 import secrets
 
@@ -11,6 +11,10 @@ app.secret_key = secrets.token_urlsafe(16)
 
 # Initialize the database
 database = database.Database("data/database.db")
+
+log.debug(database.set_user_detail("name", "Harry"))
+log.debug(database.get_user_detail("name"))
+
 
 
 @app.route("/")
