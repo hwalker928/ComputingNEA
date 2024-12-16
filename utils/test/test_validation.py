@@ -1,6 +1,6 @@
 import unittest
 
-from validation import *
+from utils.validation import *
 
 
 class TestPrivateKeyPasswordValidation(unittest.TestCase):
