@@ -9,6 +9,7 @@ app = Flask(__name__)
 app.config["SESSION_TYPE"] = "filesystem"
 app.secret_key = secrets.token_urlsafe(16)
 
+# Initialize the database
 database = database.Database("data/database.db")
 
 

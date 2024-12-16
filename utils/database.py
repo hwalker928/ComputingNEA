@@ -2,6 +2,7 @@ import sqlite3
 from typing import Any
 from utils import log
 
+
 class Database:
     # Constructor
     def __init__(self, db_file: str):
@@ -31,5 +32,3 @@ class Database:
     def close(self) -> None:
         log.debug(f"Closing database {self.db_file}")
         self.conn.close()
-    
-    
