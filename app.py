@@ -31,7 +31,7 @@ def root():
 
 
 @app.route("/setup-key", methods=["GET", "POST"])
-def setupKey():
+def setupKey1():
     if request.method == "GET":
         return render_template("setup-key.html")
 
@@ -52,7 +52,30 @@ def setupKey():
     kp.generate_key_pair()
     kp.save_keys_to_files()
 
-    # Redirect the user to the login page after the key pair is generated
+    # Redirect the user to the stage 2 page after the key pair is generated
+    return redirect("/setup-name")
+
+@app.route("/setup-name", methods=["GET", "POST"])
+def setupName2():
+    if request.method == "GET":
+        # TODO: make setup-name.html
+        return render_template("setup-name.html")
+
+    # Get the user's name from the form
+    name = request.form.get("name")
+
+    # Check if the name passes validation
+    # TODO: this
+    valid, error = validation.check_valid_private_key_password(password)
+    if not valid:
+        # Return an error to the user if the name input is invalid
+        flash(error, "error")
+        return redirect("/setup-name")
+
+    # Save the name to the database
+    database.set_user_detail("name", name)
+
+    # Redirect the user to the login page after the name is saved
     return redirect("/")
 
 
