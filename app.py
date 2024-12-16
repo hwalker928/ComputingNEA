@@ -25,23 +25,28 @@ def root():
 
 @app.route("/setup-key", methods=["GET", "POST"])
 def setupKey():
-    if request.method == "POST":
-        password = request.form.get("password")
+    if request.method == "GET":
+        return render_template("setup-key.html")
 
-        valid, error = validation.check_valid_private_key_password(password)
-        if not valid:
-            flash(error, "error")
-            return redirect("/setup-key")
+    # Get the password from the form
+    password = request.form.get("password")
 
-        kp = encryption.KeyPair()
+    # Check if the password passes validation
+    valid, error = validation.check_valid_private_key_password(password)
+    if not valid:
+        # Return an error to the user if the password is weak
+        flash(error, "error")
+        return redirect("/setup-key")
 
-        kp.set_private_key_password(password)
-        kp.generate_key_pair()
-        kp.save_keys_to_files()
+    # Generate the key pair and save it locally
+    kp = encryption.KeyPair()
 
-        return redirect("/")
+    kp.set_private_key_password(password)
+    kp.generate_key_pair()
+    kp.save_keys_to_files()
 
-    return render_template("setup-key.html")
+    # Redirect the user to the login page after the key pair is generated
+    return redirect("/")
 
 
 @app.route("/login", methods=["GET", "POST"])
