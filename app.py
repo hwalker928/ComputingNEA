@@ -1,13 +1,15 @@
 from flask import Flask, render_template, redirect, request, session, flash
 import multiprocessing
 import webview
-from utils import encryption, validation
+from utils import encryption, validation, database
 import os
 import secrets
 
 app = Flask(__name__)
 app.config["SESSION_TYPE"] = "filesystem"
 app.secret_key = secrets.token_urlsafe(16)
+
+database = database.Database("data/database.db")
 
 
 @app.route("/")
