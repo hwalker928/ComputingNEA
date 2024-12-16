@@ -68,7 +68,7 @@ def login_page():
         # Password is valid
         session["private_key_password"] = password
         return redirect("/")
-    
+
     # Increase the login attempts counter
     session["login_attempts"] = session.get("login_attempts", 0) + 1
 
@@ -81,7 +81,7 @@ def login_page():
 
     # Password is invalid, return an error
     flash(f"Invalid password, attempt {session.get("login_attempts")}/3", "error")
-    
+
     return redirect("/login")
 
 
