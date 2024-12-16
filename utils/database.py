@@ -32,13 +32,13 @@ class Database:
     def close(self) -> None:
         log.debug(f"Closing database {self.db_file}")
         self.conn.close()
-    
+
     def get_user_detail(self, key: str) -> Any:
         log.debug(f"Getting user details for {key}")
         query = f"SELECT value FROM user_details WHERE key = '{key}'"
         result = self.query(query)
         return result[0][0] if result else None
-    
+
     def set_user_detail(self, key: str, value: Any) -> None:
         log.debug(f"Setting user details for {key}")
         query = f"INSERT OR REPLACE INTO user_details (key, value) VALUES ('{key}', '{value}')"

@@ -12,6 +12,7 @@ app.secret_key = secrets.token_urlsafe(16)
 # Initialize the database
 database = database.Database("data/database.db")
 
+
 @app.route("/")
 def root():
     # Check if the keys are generated
@@ -21,7 +22,7 @@ def root():
     # Check if the user is logged in by checking if the private key password is set
     if not "private_key_password" in session:
         return redirect("/login")
-    
+
     if not database.get_user_detail("name"):
         return redirect("/setup-name")
 
@@ -31,7 +32,9 @@ def root():
 @app.route("/setup-key", methods=["GET", "POST"])
 def setupKey1():
     if request.method == "GET":
-        return render_template("setup-key.html", entry_num=session.get("setup-key_setup_num", 1))
+        return render_template(
+            "setup-key.html", entry_num=session.get("setup-key_setup_num", 1)
+        )
 
     # Get the password from the form
     password = request.form.get("password")
@@ -42,7 +45,7 @@ def setupKey1():
         # Return an error to the user if the password is weak
         flash(error, "error")
         return redirect("/setup-key")
-    
+
     # Save the password to the session and redirect the user to confirm again
     if session.get("setup-key_setup_num", 1) == 1:
         # Save the password to the session
@@ -70,6 +73,7 @@ def setupKey1():
     # Redirect the user to the stage 2 page after the key pair is generated
     return redirect("/setup-name")
 
+
 @app.route("/setup-name", methods=["GET", "POST"])
 def setupName2():
     if request.method == "GET":
@@ -81,7 +85,7 @@ def setupName2():
 
     # Check if the name passes validation
     # TODO: this
-    #valid, error = validation.check_valid_private_key_password(name)
+    # valid, error = validation.check_valid_private_key_password(name)
     valid, error = True, None
     if not valid:
         # Return an error to the user if the name input is invalid
@@ -126,7 +130,7 @@ def login_page():
         return redirect("/login")
 
     # Password is invalid, return an error
-    flash(f"Invalid password, attempt {session.get("login_attempts")}/3", "error")
+    flash(f"Invalid password, attempt {session.get('login_attempts')}/3", "error")
 
     return redirect("/login")
 
@@ -145,4 +149,7 @@ if __name__ == "__main__":
     webview_process = multiprocessing.Process(target=start_webview)
     webview_process.start()
 
-    app.run(debug=True, use_reloader=False)
+    try:
+        app.run(debug=True, use_reloader=False)
+    except KeyboardInterrupt:
+        pass
