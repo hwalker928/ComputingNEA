@@ -4,15 +4,24 @@
 <div class="container">
     <div class="text-center">
         <h1 style="margin: 0;">Password Manager</h1>
+        {% if entry_num == 1 %}
         <p>Stage 1: <span style="font-weight: bold;">Encryption Setup</span></p>
+        {% else %}
+        <p>Stage 2: <span style="font-weight: bold;">Encryption Confirmation</span></p>
+        {% endif %}
 
         <form method="post" style="margin-top: 1rem;">
-            <label for="password">Encryption Master Key:</label>
+            {% if entry_num == 1 %}
+            <label for="password">Create Encryption Key:</label>
+            {% else %}
+            <label for="password">Confirm Encryption Key:</label>
+            {% endif %}
+
             <br />
             <input type="password" id="password" name="password" required class="large">
 
             <br />
-            <input type="submit" value="Validate" style="margin-top: 1rem;">
+            <input type="submit" value="Confirm" style="margin-top: 1rem;">
 
             {% with errors = get_flashed_messages(category_filter=["error"]) %}
             {% for error in errors %}
@@ -22,16 +31,18 @@
 
         </form>
     </div>
+    {% if session.get("show_password_requirements", True) %}
     <div class="text-center" style="margin-left: 1rem;">
-        <h2>Tips for a strong key</h2>
+        <h2>Password requirements</h2>
 
         <ul style="text-align: left;">
-            <li>Use a mix of letters, numbers, and special characters</li>
-            <li>Make it at least 12 characters long</li>
-            <li>Don't use common words or phrases</li>
-            <li>Don't use personal information</li>
+            <li>Must be at least 12 characters long</li>
+            <li>Must contain a number</li>
+            <li>Must contain both uppercase and lowercase characters</li>
+            <li>Must contain at least one special character</li>
         </ul>
     </div>
+    {% endif %}
 </div>
 
 {% endblock %}

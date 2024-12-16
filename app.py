@@ -21,6 +21,9 @@ def root():
     # Check if the user is logged in by checking if the private key password is set
     if not "private_key_password" in session:
         return redirect("/login")
+    
+    if not database.get_user_detail("name"):
+        return redirect("/setup-name")
 
     return render_template("index.html", name=database.get_user_detail("name"))
 
@@ -28,7 +31,7 @@ def root():
 @app.route("/setup-key", methods=["GET", "POST"])
 def setupKey1():
     if request.method == "GET":
-        return render_template("setup-key.html")
+        return render_template("setup-key.html", entry_num=session.get("setup-key_setup_num", 1))
 
     # Get the password from the form
     password = request.form.get("password")
@@ -39,10 +42,27 @@ def setupKey1():
         # Return an error to the user if the password is weak
         flash(error, "error")
         return redirect("/setup-key")
+    
+    # Save the password to the session and redirect the user to confirm again
+    if session.get("setup-key_setup_num", 1) == 1:
+        # Save the password to the session
+        session["private_key_password"] = password
+        session["setup-key_setup_num"] = 2
+        session["show_password_requirements"] = False
+        return redirect("/setup-key")
+
+    # Check if the password matches the one saved in the session
+    if password != session.get("private_key_password", ""):
+        flash("Passwords do not match", "error")
+        session["setup-key_setup_num"] = 1
+        session["show_password_requirements"] = True
+        return redirect("/setup-key")
+
+    # Clear the password from the session as it is no longer needed
+    session.pop("private_key_password", None)
 
     # Generate the key pair and save it locally
     kp = encryption.KeyPair()
-
     kp.set_private_key_password(password)
     kp.generate_key_pair()
     kp.save_keys_to_files()

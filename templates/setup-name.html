@@ -4,7 +4,7 @@
 <div class="container">
     <div class="text-center">
         <h1 style="margin: 0;">Password Manager</h1>
-        <p>Stage 1: <span style="font-weight: bold;">Personlization Setup</span></p>
+        <p>Stage 3: <span style="font-weight: bold;">Personalization Setup</span></p>
 
         <form method="post" style="margin-top: 1rem;">
             <label for="name">What's your name?</label>
@@ -12,7 +12,7 @@
             <input type="text" id="name" name="name" required class="large">
 
             <br />
-            <input type="submit" value="Validate" style="margin-top: 1rem;">
+            <input type="submit" value="Confirm" style="margin-top: 1rem;">
 
             {% with errors = get_flashed_messages(category_filter=["error"]) %}
             {% for error in errors %}
