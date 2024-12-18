@@ -1,9 +1,9 @@
 import sqlite3
 
-connection = sqlite3.connect("data/database.db")
-
 
 def init():
+    connection = sqlite3.connect("data/database.db")
+
     with open("schema.sql") as f:
         connection.executescript(f.read())
 

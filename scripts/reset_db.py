@@ -1,4 +1,4 @@
-import sqlite3, os
+import os
 
 
 def reset():
@@ -8,14 +8,6 @@ def reset():
         os.remove("keys/private.key")
     if os.path.exists("keys/public.key"):
         os.remove("keys/public.key")
-
-    connection = sqlite3.connect("data/database.db")
-
-    with open("schema.sql") as f:
-        connection.executescript(f.read())
-
-    connection.commit()
-    connection.close()
 
 
 if __name__ == "__main__":

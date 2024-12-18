@@ -1,6 +1,8 @@
 import sqlite3
 from typing import Any
+
 from utils import log
+from scripts import reset_db, init_db
 
 
 class Database:
@@ -22,6 +24,23 @@ class Database:
         log.debug(f"Closing database {self.db_file}")
         # Close the database connection
         self.conn.close()
+
+    def setup_database(self) -> None:
+        log.debug("Setting up database")
+
+        # Close the database connection
+        self.close()
+
+        # Reset the database
+        reset_db.reset()
+
+        # Initialize the database
+        init_db.init()
+
+        # Reconnect to the new database
+        self.connect()
+
+        log.debug("Database setup complete")
 
     def get_cursor(self) -> sqlite3.Cursor:
         return self.cursor
@@ -47,6 +66,13 @@ class Database:
         # Close the database connection
         self.conn.close()
 
+    def connect(self) -> None:
+        log.debug(f"Connecting to database {self.db_file}")
+
+        # Close the database connection
+        self.conn = sqlite3.connect(self.db_file, check_same_thread=False)
+        self.cursor = self.conn.cursor()
+
     def get_user_detail(self, key: str) -> Any:
         log.debug(f"Getting user details for {key}")
 
@@ -55,7 +81,7 @@ class Database:
 
         # Execute SQL query
         result = self.query(query)
-        
+
         # Return value if found, else return None
         return result[0][0] if result else None
 
