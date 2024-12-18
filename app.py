@@ -43,15 +43,15 @@ def setupKey1():
     # Get the password from the form
     password = request.form.get("password")
 
-    # Check if the password passes validation
-    valid, error = validation.check_valid_private_key_password(password)
-    if not valid:
-        # Return an error to the user if the password is weak
-        flash(error, "error")
-        return redirect("/setup-key")
-
     # Save the password to the session and redirect the user to confirm again
     if session.get("setup-key_setup_num", 1) == 1:
+        # Check if the password passes validation
+        valid, error = validation.check_valid_private_key_password(password)
+        if not valid:
+            # Return an error to the user if the password is weak
+            flash(error, "error")
+            return redirect("/setup-key")
+
         # Save the password to the session
         session["private_key_password"] = password
         session["setup-key_setup_num"] = 2
