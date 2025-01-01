@@ -34,7 +34,7 @@ def root():
 
 
 @app.route("/setup-key", methods=["GET", "POST"])
-def setupKey1():
+def setup_key_1():
     if request.method == "GET":
         return render_template(
             "setup-key.html", entry_num=session.get("setup-key_setup_num", 1)
@@ -79,7 +79,7 @@ def setupKey1():
 
 
 @app.route("/setup-name", methods=["GET", "POST"])
-def setupName2():
+def setup_name_2():
     if request.method == "GET":
         # TODO: make setup-name.html
         return render_template("setup-name.html")
