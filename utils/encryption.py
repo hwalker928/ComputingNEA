@@ -64,7 +64,6 @@ class KeyPair:
     def set_private_key_password(self, passphrase: str) -> Self:
         log.debug("Setting private key password")
 
-        # TODO: implement validation
         self.__private_key_password = passphrase
 
         return self

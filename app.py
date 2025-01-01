@@ -81,16 +81,13 @@ def setup_key_1():
 @app.route("/setup-name", methods=["GET", "POST"])
 def setup_name_2():
     if request.method == "GET":
-        # TODO: make setup-name.html
         return render_template("setup-name.html")
 
     # Get the user's name from the form
     name = request.form.get("name")
 
     # Check if the name passes validation
-    # TODO: this
-    # valid, error = validation.check_valid_private_key_password(name)
-    valid, error = True, None
+    valid, error = validation.check_valid_name(name)
     if not valid:
         # Return an error to the user if the name input is invalid
         flash(error, "error")

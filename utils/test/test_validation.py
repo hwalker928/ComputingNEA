@@ -64,5 +64,24 @@ class TestPrivateKeyPasswordValidation(unittest.TestCase):
         self.assertEqual(check_valid_private_key_password("Abcdefgh1jk!")[1], None)
 
 
+class TestNameValidation(unittest.TestCase):
+    def test_valid_name(self):
+        self.assertTrue(check_valid_name("JohnDoe")[0])
+        self.assertTrue(check_valid_name("Jane")[0])
+        self.assertTrue(check_valid_name("AliceBob")[0])
+
+    def test_invalid_name(self):
+        self.assertFalse(check_valid_name("")[0])
+        self.assertFalse(check_valid_name(" ")[0])
+        self.assertFalse(check_valid_name(None)[0])
+        self.assertFalse(check_valid_name("A")[0])
+        self.assertFalse(check_valid_name("AB")[0])
+        self.assertFalse(check_valid_name("1234")[0])
+        self.assertFalse(check_valid_name("JohnDoe123")[0])
+        self.assertFalse(check_valid_name("John Doe")[0])
+        self.assertFalse(check_valid_name("John-Doe")[0])
+        self.assertFalse(check_valid_name("John.Doe")[0])
+
+
 if __name__ == "__main__":
     unittest.main()

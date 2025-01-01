@@ -26,3 +26,19 @@ def check_valid_private_key_password(password: str) -> Tuple[bool, str | None]:
         return (False, "Password must contain at least one special character")
 
     return (True, None)
+
+
+def check_valid_name(name: str) -> Tuple[bool, str | None]:
+    if not name:
+        return (False, "Name cannot be empty")
+
+    if len(name) < 3:
+        return (False, "Name must be at least 3 characters long")
+
+    if len(name) > 16:
+        return (False, "Name cannot be more than 16 characters long")
+
+    if not name.isalpha():
+        return (False, "Name must only contain letters")
+
+    return (True, None)
