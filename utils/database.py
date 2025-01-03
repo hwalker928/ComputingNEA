@@ -21,9 +21,7 @@ class Database:
 
     # Destructor
     def __del__(self) -> None:
-        log.debug(f"Closing database {self.db_file}")
-        # Close the database connection
-        self.conn.close()
+        self.close()
 
     def setup_database(self) -> None:
         log.debug("Setting up database")
@@ -65,6 +63,8 @@ class Database:
 
         # Close the database connection
         self.conn.close()
+
+        log.debug(f"Closed database {self.db_file}")
 
     def connect(self) -> None:
         log.debug(f"Connecting to database {self.db_file}")

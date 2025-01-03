@@ -13,9 +13,6 @@ app.secret_key = secrets.token_urlsafe(16)
 # Initialize the database
 database = database.Database("data/database.db")
 
-# Reset the database to schema
-database.setup_database()
-
 
 @app.route("/")
 def root():
@@ -149,6 +146,9 @@ def start_webview():
 if __name__ == "__main__":
     webview_process = multiprocessing.Process(target=start_webview)
     webview_process.start()
+
+    # Reset the database to schema
+    database.setup_database()
 
     try:
         app.run(debug=True, use_reloader=False)
