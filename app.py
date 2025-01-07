@@ -1,16 +1,16 @@
 from flask import Flask, render_template, redirect, request, session, flash
-import multiprocessing
+import threading, multiprocessing
 import webview
 import os
 import secrets
 
-from utils import encryption, validation, database
+from utils import encryption, validation, database, log
 
 app = Flask(__name__)
 app.config["SESSION_TYPE"] = "filesystem"
 app.secret_key = secrets.token_urlsafe(16)
 
-# Initialize the database
+# Initialize the database connection
 database = database.Database("data/database.db")
 
 
@@ -65,14 +65,23 @@ def setup_key_1():
     # Clear the password from the session as it is no longer needed
     session.pop("private_key_password", None)
 
+    # Generate the key pair and save it locally in a separate thread
+    log.debug("Creating keypair thread")
+    setup_keypair_thread = threading.Thread(target=setup_keypair, args=(password,))
+    setup_keypair_thread.start()
+
+    # Redirect the user to the stage 2 page after the key pair is generated
+    return redirect("/setup-name")
+
+
+def setup_keypair(password):
+    log.debug("Setting up key pair")
+
     # Generate the key pair and save it locally
     kp = encryption.KeyPair()
     kp.set_private_key_password(password)
     kp.generate_key_pair()
     kp.save_keys_to_files()
-
-    # Redirect the user to the stage 2 page after the key pair is generated
-    return redirect("/setup-name")
 
 
 @app.route("/setup-name", methods=["GET", "POST"])
@@ -94,7 +103,7 @@ def setup_name_2():
     database.set_user_detail("name", name)
 
     # Redirect the user to the login page after the name is saved
-    return redirect("/")
+    return redirect("/login")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -139,16 +148,19 @@ def internal_error(error):
 
 
 def start_webview():
+    log.debug("Starting webview process")
     webview.create_window("Password Manager", app, confirm_close=True)
     webview.start()
 
 
 if __name__ == "__main__":
+    # Reset the database to schema
+    # TODO: only reset if the database is not already set up
+    setup_database_thread = threading.Thread(target=database.setup_database)
+    setup_database_thread.start()
+
     webview_process = multiprocessing.Process(target=start_webview)
     webview_process.start()
-
-    # Reset the database to schema
-    database.setup_database()
 
     try:
         app.run(debug=True, use_reloader=False)
