@@ -5,6 +5,13 @@
     <title>Password Manager</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+      fetch('/api/database/get?key=colour')
+        .then(response => response.json())
+        .then(data => {
+          document.body.style.backgroundColor = data.value;
+        });
+    </script>
 </head>
 
 <body>

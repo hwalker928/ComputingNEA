@@ -16,10 +16,6 @@ database = database.Database("data/database.db")
 
 @app.route("/")
 def root():
-    return redirect(
-        "/setup-colour"
-    )
-
     # Check if the keys are generated
     if not os.path.isfile("keys/private.key") or not os.path.isfile("keys/public.key"):
         return redirect("/setup-key")
@@ -169,6 +165,15 @@ def login_page():
 
     return redirect("/login")
 
+
+@app.route('/api/database/get', methods=["GET"])
+def api_database_get():
+    if not request.args.get("key", None):
+        return "No key provided", 400
+
+    key = request.args.get("key")
+    value = database.get_user_detail(key)
+    return {"key": key, "value": value}
 
 @app.errorhandler(500)
 def internal_error(error):
