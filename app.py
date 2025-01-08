@@ -34,7 +34,7 @@ def root():
 def setup_key_1():
     if request.method == "GET":
         return render_template(
-            "setup-key.html", entry_num=session.get("setup-key_setup_num", 1)
+            "setup/key.html", entry_num=session.get("setup-key_setup_num", 1)
         )
 
     # Get the password from the form
@@ -87,7 +87,7 @@ def setup_keypair(password):
 @app.route("/setup-name", methods=["GET", "POST"])
 def setup_name_2():
     if request.method == "GET":
-        return render_template("setup-name.html")
+        return render_template("setup/name.html")
 
     # Get the user's name from the form
     name = request.form.get("name")
