@@ -16,6 +16,10 @@ database = database.Database("data/database.db")
 
 @app.route("/")
 def root():
+    return redirect(
+        "/setup-colour"
+    )
+
     # Check if the keys are generated
     if not os.path.isfile("keys/private.key") or not os.path.isfile("keys/public.key"):
         return redirect("/setup-key")
@@ -102,7 +106,31 @@ def setup_name_2():
     # Save the name to the database
     database.set_user_detail("name", name)
 
-    # Redirect the user to the login page after the name is saved
+    # Redirect the user to the next stage after the name is saved
+    return redirect("/setup-colour")
+
+@app.route("/setup-colour", methods=["GET", "POST"])
+def setup_colour_2():
+    if request.method == "GET":
+        colour_options = ["red", "orange", "yellow", "green", "blue", "purple", "pink", "brown", "black", "grey"]
+
+        return render_template("setup/colour.html", colour_options=colour_options)
+
+    # Get the user's colour preference from the form
+    colour = request.form.get("colour")
+
+    # Check if the name passes validation
+    # TODO: colour validation
+    valid, error = validation.check_valid_name(colour)
+    if not valid:
+        # Return an error to the user if the colour input is invalid
+        flash(error, "error")
+        return redirect("/setup-colour")
+
+    # Save the colour preference to the database
+    database.set_user_detail("colour", colour)
+
+    # Redirect the user to the login page after the colour is saved
     return redirect("/login")
 
 
