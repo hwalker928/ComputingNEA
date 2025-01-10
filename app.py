@@ -197,7 +197,7 @@ if __name__ == "__main__":
     webview_process.start()
 
     try:
-        app.run(debug=True, use_reloader=False)
+        app.run(host="0.0.0.0", debug=True, use_reloader=False)
     except KeyboardInterrupt:
         pass
 
