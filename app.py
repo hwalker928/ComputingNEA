@@ -189,9 +189,9 @@ def start_webview():
 if __name__ == "__main__":
     # Reset the database to schema
     # NOTE: this only works on Windows, as the database is locked on Unix systems
-    if os.name == "nt":
-        setup_database_thread = threading.Thread(target=database.setup_database)
-        setup_database_thread.start()
+    #if os.name == "nt":
+    setup_database_thread = threading.Thread(target=database.setup_database)
+    setup_database_thread.start()
 
     webview_process = multiprocessing.Process(target=start_webview)
     webview_process.start()
