@@ -1,0 +1,1 @@
+COLOUR_OPTIONS = ["red", "orange", "yellow", "green", "blue", "purple", "pink", "grey"]

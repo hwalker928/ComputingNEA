@@ -1,5 +1,5 @@
 from typing import Tuple
-
+from . import consts
 
 def check_valid_private_key_password(password: str) -> Tuple[bool, str | None]:
     if not password:
@@ -29,16 +29,31 @@ def check_valid_private_key_password(password: str) -> Tuple[bool, str | None]:
 
 
 def check_valid_name(name: str) -> Tuple[bool, str | None]:
+    # Check if no name was provided
     if not name:
         return (False, "Name cannot be empty")
 
+    # Check if the name is at least 3 characters long
     if len(name) < 3:
         return (False, "Name must be at least 3 characters long")
 
+    # Check if the name is no longer than 16 characters
     if len(name) > 16:
         return (False, "Name cannot be more than 16 characters long")
 
+    # Check if the name contains anything but letters
     if not name.isalpha():
         return (False, "Name must only contain letters")
+
+    return (True, None)
+
+def check_valid_colour_option(colour_option: str) -> Tuple[bool, str | None]:
+    # Check if no colour was provided
+    if not colour_option:
+        return (False, "Colour option cannot be empty")
+
+    # Check if the colour is in the valid colours list
+    if colour_option not in consts.COLOUR_OPTIONS:
+        return (False, "Not a valid colour option")
 
     return (True, None)
