@@ -23,6 +23,18 @@ class Database:
     def __del__(self) -> None:
         self.close()
 
+    def is_database_setup(self) -> bool:
+        log.debug("Checking if database is setup")
+
+        # Check if the user_details table exists
+        query = "SELECT name FROM sqlite_master WHERE type='table' AND name='user_details'"
+
+        # Execute the SQL query
+        result = self.query(query)
+
+        # Return True if the table exists, else return False
+        return True if result else False
+
     def setup_database(self) -> None:
         log.debug("Setting up database")
 
