@@ -1,1 +1,10 @@
-COLOUR_OPTIONS = ["red", "orange", "yellow", "green", "blue", "purple", "pink", "grey"]
+COLOUR_OPTIONS = [
+    "red",
+    "orange",
+    "yellow",
+    "aquamarine",
+    "blue",
+    "purple",
+    "pink",
+    "grey",
+]

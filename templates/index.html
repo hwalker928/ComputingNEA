@@ -3,5 +3,9 @@
   <h1>Hi, {{name}}!</h1>
 
   <p>You have successfully authenticated. You can now access your passwords.</p>
+
+  {% for credential in credentials %}
+  <p>{{ credential }}</p>
+  {% endfor %}
 </div>
 {% endblock %}

@@ -50,7 +50,7 @@ class Database:
         init_db.init()
 
         # Reconnect to the new database
-        self.__connect()
+        self.connect()
 
         log.debug("Database setup complete")
 
@@ -110,3 +110,12 @@ class Database:
 
         # Commit the changes to the database
         self.commit()
+
+    def get_all_credentials(self):
+        log.debug("Getting all credentials")
+
+        # Query to obtain all credentials
+        query = "SELECT * FROM credentials"
+
+        # Execute SQL query
+        return self.query(query)

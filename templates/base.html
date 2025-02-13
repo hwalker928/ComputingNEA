@@ -1,21 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <title>Password Manager</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
+    <script src="{{ url_for('static', filename='js/cookiehelper.js') }}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script>
-      fetch('/api/database/get?key=colour')
-        .then(response => response.json())
-        .then(data => {
-          document.body.style.backgroundColor = data.value;
-        });
+      function loadColour() {
+        let colour = getCookie("colour");
+        if (colour == null) {
+          console.log("No cookie found, fetching from server");
+          fetch("/api/database/get?key=colour")
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.value == null) {
+                console.log("No colour found in database, using default");
+                data.value = "white";
+              } else {
+                setCookie("colour", data.value);
+              }
+              console.log(`Server returned: ${data.value}`);
+              document.body.style.backgroundColor = data.value;
+            });
+        } else {
+          console.log(`Cookie found! Applying colour ${colour}`);
+          document.body.style.backgroundColor = colour;
+        }
+      }
     </script>
-</head>
+  </head>
 
-<body>
+  <body onload="loadColour()">
     {% block content %}{% endblock %}
-</body>
-
+  </body>
 </html>

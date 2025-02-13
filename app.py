@@ -27,7 +27,11 @@ def root():
     if not database.get_user_detail("name"):
         return redirect("/setup-name")
 
-    return render_template("index.html", name=database.get_user_detail("name"))
+    return render_template(
+        "index.html",
+        name=database.get_user_detail("name"),
+        credentials=database.get_all_credentials(),
+    )
 
 
 @app.route("/setup-key", methods=["GET", "POST"])
@@ -105,10 +109,13 @@ def setup_name_2():
     # Redirect the user to the next stage after the name is saved
     return redirect("/setup-colour")
 
+
 @app.route("/setup-colour", methods=["GET", "POST"])
 def setup_colour_3():
     if request.method == "GET":
-        return render_template("setup/colour.html", colour_options=consts.COLOUR_OPTIONS)
+        return render_template(
+            "setup/colour.html", colour_options=consts.COLOUR_OPTIONS
+        )
 
     # Get the user's colour preference from the form
     colour = request.form.get("colour")
@@ -163,7 +170,7 @@ def login_page():
     return redirect("/login")
 
 
-@app.route('/api/database/get', methods=["GET"])
+@app.route("/api/database/get", methods=["GET"])
 def api_database_get():
     if not request.args.get("key", None):
         return "No key provided", 400
@@ -171,6 +178,7 @@ def api_database_get():
     key = request.args.get("key")
     value = database.get_user_detail(key)
     return {"key": key, "value": value}
+
 
 @app.errorhandler(500)
 def internal_error(error):
