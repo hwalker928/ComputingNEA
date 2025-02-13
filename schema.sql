@@ -1,6 +1,5 @@
 CREATE TABLE `credentials` (
 	`id` INTEGER PRIMARY KEY,
-	`last_used_at` DATETIME,
 	`name` TEXT(65535) NOT NULL,
 	`username` TEXT(65535),
 	`password` TEXT(65535),
@@ -8,6 +7,7 @@ CREATE TABLE `credentials` (
 	`two_factor_id` INTEGER,
 	`created_at` DATETIME NOT NULL,
 	`updated_at` DATETIME NOT NULL,
+	`last_used_at` DATETIME,
 	`tag_id` INTEGER
 );
 

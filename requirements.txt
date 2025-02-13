@@ -1,3 +1,4 @@
 flask
 pywebview
 pycryptodome
+Faker

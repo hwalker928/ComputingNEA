@@ -5,7 +5,7 @@
   <p>You have successfully authenticated. You can now access your passwords.</p>
 
   {% for credential in credentials %}
-  <p>{{ credential }}</p>
+  <button onclick="alert('{{ credential[3] }}')">{{ credential[1] }}</button>
   {% endfor %}
 </div>
 {% endblock %}
