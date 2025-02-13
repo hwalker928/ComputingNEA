@@ -11,11 +11,11 @@ class Database:
         log.debug(f"Connecting to database {db_file}")
 
         # Set the class attributes based on the parameters
-        self.db_file = db_file
+        self.__db_file = db_file
         # Connect to the database using sqlite3
-        self.conn = sqlite3.connect(db_file, check_same_thread=False)
+        self.__conn = sqlite3.connect(db_file, check_same_thread=False)
         # Creating a cursor using the database connection
-        self.cursor = self.conn.cursor()
+        self.__cursor = self.__conn.cursor()
 
         log.debug(f"Connected to database {db_file}")
 
@@ -27,7 +27,9 @@ class Database:
         log.debug("Checking if database is setup")
 
         # Check if the user_details table exists
-        query = "SELECT name FROM sqlite_master WHERE type='table' AND name='user_details'"
+        query = (
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='user_details'"
+        )
 
         # Execute the SQL query
         result = self.query(query)
@@ -48,42 +50,42 @@ class Database:
         init_db.init()
 
         # Reconnect to the new database
-        self.connect()
+        self.__connect()
 
         log.debug("Database setup complete")
 
     def get_cursor(self) -> sqlite3.Cursor:
-        return self.cursor
+        return self.__cursor
 
     def query(self, query: str) -> list[Any]:
         log.debug(f"Executing query: {query}")
 
         # Execute the SQL query
-        self.cursor.execute(query)
+        self.__cursor.execute(query)
 
         # Return all results from the query
-        return self.cursor.fetchall()
+        return self.__cursor.fetchall()
 
     def commit(self) -> None:
         log.debug("Committing changes to database")
 
         # Commit the changes to the database
-        self.conn.commit()
+        self.__conn.commit()
 
     def close(self) -> None:
-        log.debug(f"Closing database {self.db_file}")
+        log.debug(f"Closing database {self.__db_file}")
 
         # Close the database connection
-        self.conn.close()
+        self.__conn.close()
 
-        log.debug(f"Closed database {self.db_file}")
+        log.debug(f"Closed database {self.__db_file}")
 
     def connect(self) -> None:
-        log.debug(f"Connecting to database {self.db_file}")
+        log.debug(f"Connecting to database {self.__db_file}")
 
         # Close the database connection
-        self.conn = sqlite3.connect(self.db_file, check_same_thread=False)
-        self.cursor = self.conn.cursor()
+        self.__conn = sqlite3.connect(self.__db_file, check_same_thread=False)
+        self.__cursor = self.__conn.cursor()
 
     def get_user_detail(self, key: str) -> Any:
         log.debug(f"Getting user details for {key}")
