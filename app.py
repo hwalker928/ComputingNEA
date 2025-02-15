@@ -34,9 +34,44 @@ def root():
     )
 
 
+@app.route("/view/<id>")
+def view_credential(id: int):
+    # Check if the user is logged in by checking if the private key password is set
+    if not "private_key_password" in session:
+        return redirect("/login")
+
+    credential = database.query(f"SELECT * FROM credentials WHERE id = '{id}'")
+
+    if not len(credential) == 1:
+        # return an error
+        pass
+
+    credential = credential[0]
+
+    print(credential)
+
+    kp = encryption.KeyPair()
+    kp.load_existing_key_pair(session["private_key_password"])
+
+    enc = encryption.Encryption(kp)
+
+    print(credential[3])
+
+    password = enc.decrypt(credential[3])
+
+    return render_template(
+        "view.html",
+        name=database.get_user_detail("name"),
+        credential=credential,
+        password=password,
+    )
+
+
 @app.route("/setup-key", methods=["GET", "POST"])
 def setup_key_1():
     if request.method == "GET":
+        # TODO: send a clear colour cookie to reset any previous colour preferences
+
         return render_template(
             "setup/key.html", entry_num=session.get("setup-key_setup_num", 1)
         )
@@ -113,6 +148,8 @@ def setup_name_2():
 @app.route("/setup-colour", methods=["GET", "POST"])
 def setup_colour_3():
     if request.method == "GET":
+        # TODO: fix the colour borders if the background is not currently white
+
         return render_template(
             "setup/colour.html", colour_options=consts.COLOUR_OPTIONS
         )
@@ -137,6 +174,12 @@ def setup_colour_3():
 @app.route("/login", methods=["GET", "POST"])
 def login_page():
     if request.method == "GET":
+        # Check if the keys are generated
+        if not os.path.isfile("keys/private.key") or not os.path.isfile(
+            "keys/public.key"
+        ):
+            return redirect("/setup-key")
+
         return render_template("login.html")
 
     if session.get("login_attempts", 0) == -1:
@@ -186,6 +229,8 @@ def internal_error(error):
 
 
 def start_webview():
+    # temporary to disable webview
+    return
     log.debug("Starting webview process")
     webview.create_window("Password Manager", app, confirm_close=True)
     webview.start()
@@ -201,7 +246,8 @@ if __name__ == "__main__":
     webview_process.start()
 
     try:
-        app.run(host="0.0.0.0", debug=True, use_reloader=False)
+        # app.run(host="0.0.0.0", debug=True, use_reloader=False)
+        app.run(host="0.0.0.0", debug=True)
     except KeyboardInterrupt:
         pass
 

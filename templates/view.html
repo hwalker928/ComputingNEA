@@ -5,9 +5,9 @@
   <p>You have successfully authenticated. You can now access your passwords.</p>
 
   <div>
-    {% for credential in credentials %}
-    <a href="/view/{{credential[0]}}">{{ credential[1] }}</a>
-    {% endfor %}
+    <button onclick="alert('{{ password.decode() }}')">
+      {{ credential[1] }}
+    </button>
   </div>
 </div>
 {% endblock %}

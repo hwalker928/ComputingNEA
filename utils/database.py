@@ -57,11 +57,15 @@ class Database:
     def get_cursor(self) -> sqlite3.Cursor:
         return self.__cursor
 
-    def query(self, query: str) -> list[Any]:
+    def query(self, query: str, params: tuple = ()) -> list[Any]:
         log.debug(f"Executing query: {query}")
 
+        # Check if params are being used
+        if params != ():
+            log.debug(f"Included parameters: {params}")
+
         # Execute the SQL query
-        self.__cursor.execute(query)
+        self.__cursor.execute(query, params)
 
         # Return all results from the query
         return self.__cursor.fetchall()
