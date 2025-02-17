@@ -11,6 +11,7 @@
         <th>Service</th>
         <th>Username</th>
         <th>Domain</th>
+        <th>2FA Enabled?</th>
         <th>Actions</th>
       </tr>
       {% for credential in credentials %}
@@ -19,6 +20,7 @@
         <td>{{ credential[1] }}</td>
         <td>{{ credential[2] }}</td>
         <td>{{ credential[4] }}</td>
+        <td>{% if credential[5] %}Yes{% else %}No{% endif %}</td>
         <td><a href="/view/{{ credential[0] }}">View</a></td>
       </tr>
       {% endfor %}

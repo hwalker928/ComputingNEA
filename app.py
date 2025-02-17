@@ -40,25 +40,31 @@ def view_credential(id: int):
     if not "private_key_password" in session:
         return redirect("/login")
 
+    # Find the credential in the database using the ID
     credential = database.query(f"SELECT * FROM credentials WHERE id = '{id}'")
 
+    # Check that a credential was found by the ID
     if not len(credential) == 1:
         print("An invalid ID was requested.")
         pass
 
+    # Update the last_used_at column to reflect the viewing action
+    database.update_last_used_at(id)
+
+    # Since we only want the first result, index the array with 0
     credential = credential[0]
 
-    print(credential)
-
+    # Load the keypair with the private key from the session
     kp = encryption.KeyPair()
     kp.load_existing_key_pair(session["private_key_password"])
 
+    # Create an encryption instance using the keypair
     enc = encryption.Encryption(kp)
 
-    print(credential[3])
-
+    # Decrypt the encrypted password with the encryption instance, and then decode it using UTF-8
     password = enc.decrypt(credential[3]).decode()
 
+    # Return the view, with the credential and decoded password
     return render_template(
         "view.html",
         name=database.get_user_detail("name"),

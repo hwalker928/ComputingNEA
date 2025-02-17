@@ -67,6 +67,8 @@ class Database:
         # Execute the SQL query
         self.__cursor.execute(query, params)
 
+        self.commit()
+
         # Return all results from the query
         return self.__cursor.fetchall()
 
@@ -123,3 +125,11 @@ class Database:
 
         # Execute SQL query
         return self.query(query)
+
+    def update_last_used_at(self, credential_id: int):
+        log.debug(f"Updating last_used_at for credential ID {credential_id}")
+
+        # Update the last_used_at column to be the current datetime for the specified credential by ID
+        self.query(
+            f"UPDATE credentials SET last_used_at = strftime('%Y-%m-%d %H:%M:%S', 'now') WHERE id = '{credential_id}'"
+        )
