@@ -5,9 +5,24 @@
   <p>You have successfully authenticated. You can now access your passwords.</p>
 
   <div>
-    {% for credential in credentials %}
-    <a href="/view/{{credential[0]}}">{{ credential[1] }}</a>
-    {% endfor %}
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Service</th>
+        <th>Username</th>
+        <th>Domain</th>
+        <th>Actions</th>
+      </tr>
+      {% for credential in credentials %}
+      <tr>
+        <td>{{ credential[0] }}</td>
+        <td>{{ credential[1] }}</td>
+        <td>{{ credential[2] }}</td>
+        <td>{{ credential[4] }}</td>
+        <td><a href="/view/{{ credential[0] }}">View</a></td>
+      </tr>
+      {% endfor %}
+    </table>
   </div>
 </div>
 {% endblock %}

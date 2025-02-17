@@ -43,7 +43,7 @@ def view_credential(id: int):
     credential = database.query(f"SELECT * FROM credentials WHERE id = '{id}'")
 
     if not len(credential) == 1:
-        # return an error
+        print("An invalid ID was requested.")
         pass
 
     credential = credential[0]
@@ -57,7 +57,7 @@ def view_credential(id: int):
 
     print(credential[3])
 
-    password = enc.decrypt(credential[3])
+    password = enc.decrypt(credential[3]).decode()
 
     return render_template(
         "view.html",
@@ -70,8 +70,6 @@ def view_credential(id: int):
 @app.route("/setup-key", methods=["GET", "POST"])
 def setup_key_1():
     if request.method == "GET":
-        # TODO: send a clear colour cookie to reset any previous colour preferences
-
         return render_template(
             "setup/key.html", entry_num=session.get("setup-key_setup_num", 1)
         )
@@ -114,7 +112,7 @@ def setup_key_1():
 
 
 def setup_keypair(password):
-    log.debug("Setting up key pair")
+    log.debug("Setting up keypair")
 
     # Generate the key pair and save it locally
     kp = encryption.KeyPair()
@@ -148,8 +146,6 @@ def setup_name_2():
 @app.route("/setup-colour", methods=["GET", "POST"])
 def setup_colour_3():
     if request.method == "GET":
-        # TODO: fix the colour borders if the background is not currently white
-
         return render_template(
             "setup/colour.html", colour_options=consts.COLOUR_OPTIONS
         )
@@ -246,7 +242,7 @@ if __name__ == "__main__":
     webview_process.start()
 
     try:
-        # app.run(host="0.0.0.0", debug=True, use_reloader=False)
+        # TODO: this: app.run(host="0.0.0.0", debug=True, use_reloader=False)
         app.run(host="0.0.0.0", debug=True)
     except KeyboardInterrupt:
         pass

@@ -1,13 +1,59 @@
 {% extends 'base.html' %} {% block content %}
+
+<style>
+  h2 {
+    padding: 2px;
+    margin: 0px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+  }
+
+  input {
+    width: 20%;
+  }
+</style>
+
 <div style="padding: 10px">
   <h1>Hi, {{name}}!</h1>
 
   <p>You have successfully authenticated. You can now access your passwords.</p>
 
   <div>
-    <button onclick="alert('{{ password.decode() }}')">
-      {{ credential[1] }}
-    </button>
+    <h2>Username</h2>
+    <input
+      type="text"
+      id="username"
+      placeholder="{{ credential[2] }}"
+      value="{{ credential[2] }}"
+    />
+
+    <h2>Password</h2>
+    <input
+      type="password"
+      id="password"
+      placeholder="{{ password }}"
+      value="{{ password }}"
+    />
+    <button onclick="togglePasswordVisibility()">s/h</button>
+
+    <h2>Domain</h2>
+    <input
+      type="text"
+      id="domain"
+      placeholder="{{ credential[4] }}"
+      value="{{ credential[4] }}"
+    />
   </div>
 </div>
+
+<script>
+  function togglePasswordVisibility() {
+    var passwordInput = document.getElementById("password");
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+    } else {
+      passwordInput.type = "password";
+    }
+  }
+</script>
 {% endblock %}
