@@ -2,3 +2,4 @@ flask
 pywebview
 pycryptodome
 Faker
+pyotp

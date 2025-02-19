@@ -11,6 +11,7 @@
   input {
     width: 20%;
     height: 40px;
+    margin: 0;
     padding: 0;
     padding-left: 10px !important;
     padding-right: 10px !important;
@@ -52,6 +53,15 @@
       placeholder="{{ credential[4] }}"
       value="{{ credential[4] }}"
     />
+
+    {% if credential[5] %}
+    <h2>2FA Code</h2>
+    <p
+      id="countdown"
+      style="font-size: small; color: darkslategray; margin: 5px"
+    ></p>
+    <input type="text" id="2fa" value="" readonly />
+    {% endif %}
   </div>
 </div>
 
@@ -77,5 +87,35 @@
     // We have to call createIcons again else the changes won't be applied
     lucide.createIcons();
   }
+
+  function regenerateTOTP() {
+    fetch("/api/credential/{{ credential[0] }}/totp")
+      .then((response) => response.json())
+      .then((data) => {
+        document.getElementById("2fa").value = data.value;
+        startTOTPCountdown();
+      });
+  }
+
+  function startTOTPCountdown() {
+    var countdownElement = document.getElementById("countdown");
+    var timeLeft = 30;
+
+    var countdownInterval = setInterval(function () {
+      if (timeLeft <= 0) {
+        clearInterval(countdownInterval);
+        countdownElement.innerHTML = "Updating...";
+        regenerateTOTP();
+      } else {
+        countdownElement.innerHTML = "Next update in " + timeLeft + " seconds";
+      }
+      timeLeft -= 1;
+    }, 1000);
+  }
+
+  // Start the countdown if the TOTP code is present
+  {% if credential[5] %}
+    regenerateTOTP();
+  {% endif %}
 </script>
 {% endblock %}

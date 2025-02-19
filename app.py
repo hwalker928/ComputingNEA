@@ -1,8 +1,10 @@
 from flask import Flask, render_template, redirect, request, session, flash
 import threading, multiprocessing
+import pyotp.utils
 import webview
 import os
 import secrets
+import pyotp
 
 from utils import encryption, validation, database, log, consts
 import requests
@@ -224,6 +226,36 @@ def api_database_get():
     key = request.args.get("key")
     value = database.get_user_detail(key)
     return {"key": key, "value": value}
+
+
+@app.route("/api/credential/<id>/totp", methods=["GET"])
+def api_credential_totp(id: int):
+    # Check the user is authenticated
+    if not "private_key_password" in session:
+        return redirect("/login")
+
+    # Find the credential in the database using the ID
+    credential = database.query(f"SELECT * FROM credentials WHERE id = '{id}'")
+
+    # Check that a credential was found by the ID
+    if not len(credential) == 1:
+        print("An invalid ID was requested.")
+        pass
+
+    # Update the last_used_at column to reflect the API action
+    database.update_last_used_at(id)
+
+    # Since we only want the first result, index the array with 0
+    credential = credential[0]
+
+    if credential[5] is not None:
+        totp = pyotp.TOTP(credential[5])
+        totp_code = totp.now()
+    else:
+        totp_code = None
+
+    # Return the new totp code to the user
+    return {"value": totp_code}
 
 
 @app.errorhandler(500)
