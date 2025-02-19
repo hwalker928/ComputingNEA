@@ -5,6 +5,7 @@ import os
 import secrets
 
 from utils import encryption, validation, database, log, consts
+import requests
 
 app = Flask(__name__)
 app.config["SESSION_TYPE"] = "filesystem"
@@ -243,6 +244,15 @@ if __name__ == "__main__":
     if not database.is_database_setup():
         setup_database_thread = threading.Thread(target=database.setup_database)
         setup_database_thread.start()
+
+    if not os.path.isfile("static/js/imports/lucide.min.js"):
+        log.debug("Lucide icons not found, downloading")
+        response = requests.get("https://unpkg.com/lucide@latest")
+        if response.status_code == 200:
+            with open("static/js/imports/lucide.min.js", "wb") as file:
+                file.write(response.content)
+        else:
+            log.error("Failed to download Lucide icons")
 
     webview_process = multiprocessing.Process(target=start_webview)
     webview_process.start()

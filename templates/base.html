@@ -2,17 +2,32 @@
 <html lang="en">
   <head>
     <title>Password Manager</title>
+
+    <!-- Load the main CSS file -->
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/main.css') }}"
     />
+
+    <!-- Import lucide icons -->
+    <script src="{{ url_for('static', filename='js/imports/lucide.min.js') }}"></script>
+
+    <!-- Load the cookie helper script -->
     <script src="{{ url_for('static', filename='js/cookiehelper.js') }}"></script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <script>
+      // Function to load the background colour from the cookie
       function loadColour() {
+        // Get the colour from the cookie
         let colour = getCookie("colour");
+
+        // If the cookie is not set, fetch the colour from the server
         if (colour == null) {
           console.log("No cookie found, fetching from server");
+
+          // Fetch the colour from the server
           fetch("/api/database/get?key=colour")
             .then((response) => response.json())
             .then((data) => {
@@ -20,13 +35,18 @@
                 console.log("No colour found in database, using default");
                 data.value = "white";
               } else {
+                // Set the cookie to the colour
                 setCookie("colour", data.value);
               }
               console.log(`Server returned: ${data.value}`);
+
+              // Apply the colour to the background
               document.body.style.backgroundColor = data.value;
             });
         } else {
           console.log(`Cookie found! Applying colour ${colour}`);
+
+          // Apply the colour to the background
           document.body.style.backgroundColor = colour;
         }
       }
@@ -34,6 +54,11 @@
   </head>
 
   <body onload="loadColour()">
+    <div style="position: absolute; top: 10px; right: 10px">
+      <button>Home</button>
+      <button>Settings</button>
+      <button>Logout</button>
+    </div>
     {% block content %}{% endblock %}
   </body>
 </html>
