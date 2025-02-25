@@ -265,7 +265,7 @@ def internal_error(error):
 
 def start_webview():
     # temporary to disable webview
-    return
+    # return
     log.debug("Starting webview process")
     webview.create_window("Password Manager", app, confirm_close=True)
     webview.start()
