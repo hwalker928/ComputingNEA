@@ -277,13 +277,20 @@ if __name__ == "__main__":
         setup_database_thread = threading.Thread(target=database.setup_database)
         setup_database_thread.start()
 
+    # Check if lucide icons is already downloaded
     if not os.path.isfile("static/js/imports/lucide.min.js"):
         log.debug("Lucide icons not found, downloading")
+
+        # Download the latest version using requests
         response = requests.get("https://unpkg.com/lucide@latest")
+
+        # If the response is successful
         if response.status_code == 200:
+            # Write the response contents to the JS file
             with open("static/js/imports/lucide.min.js", "wb") as file:
                 file.write(response.content)
         else:
+            # Log an error
             log.error("Failed to download Lucide icons")
 
     webview_process = multiprocessing.Process(target=start_webview)
