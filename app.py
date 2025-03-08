@@ -267,7 +267,9 @@ def start_webview():
     # temporary to disable webview
     # return
     log.debug("Starting webview process")
-    webview.create_window("Password Manager", app, confirm_close=True)
+    webview.create_window(
+        "Password Manager", app, confirm_close=True, height=800, width=1200
+    )
     webview.start()
 
 
@@ -290,8 +292,8 @@ if __name__ == "__main__":
     webview_process.start()
 
     try:
-        # TODO: this: app.run(host="0.0.0.0", debug=True, use_reloader=False)
-        app.run(host="0.0.0.0", debug=True)
+        app.run(debug=True, use_reloader=False)
+        # app.run(host="0.0.0.0", debug=True)
     except KeyboardInterrupt:
         pass
 
