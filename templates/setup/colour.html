@@ -1,56 +1,55 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <style>
-    .colour-options {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 1rem;
-    }
+  .colour-options {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
 
-    .colour-options label {
-        width: 40px;
-        height: 40px;
-        display: inline-block;
-        border: 2px solid white;
-    }
+  .colour-options label {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    border: 2px solid white;
+  }
 
-    .colour-options input[type="radio"] {
-        display: none;
-    }
+  .colour-options input[type="radio"] {
+    display: none;
+  }
 
-    .colour-options input[type="radio"]:checked+label {
-        border: 2px solid black;
-    }
+  .colour-options input[type="radio"]:checked + label {
+    border: 2px solid black;
+  }
 </style>
 
+<script>
+  // This removes any previous colour from previous setups
+  setCookie("colour", "white");
+</script>
+
 <div class="container">
-    <div class="text-center">
-        <h1 style="margin: 0;">Password Manager</h1>
-        <p>Stage 4: <span style="font-weight: bold;">Personalization Setup</span></p>
+  <div class="text-center">
+    <h1 style="margin: 0">Password Manager</h1>
+    <p>Stage 4: <span style="font-weight: bold">Personalization Setup</span></p>
 
-        <form method="post" style="margin-top: 1rem;">
-            <label for="colour">Please select a colour for the application:</label>
-            <br />
-            
-            <div class="colour-options">
-                {% for colour in colour_options %}
-                <input type="radio" id="{{ colour }}" name="colour" value="{{ colour }}" {% if loop.index == 1 %}checked{% endif %}>
-                <label for="{{ colour }}" style="background-color: {{ colour }};"></label>
-                {% endfor %}
-            </div>
+    <form method="post" style="margin-top: 1rem">
+      <label for="colour">Please select a colour for the application:</label>
+      <br />
 
-            <br />
-            <input type="submit" value="Confirm" style="margin-top: 1rem;">
+      <div class="colour-options">
+        {% for colour in colour_options %} <input type="radio" id="{{ colour }}" name="colour" value="{{ colour }}" {% if loop.index == 1 %}checked{% endif %}>
+        <label for="{{ colour }}" style="background-color: {{ colour }};"></label>
+        {% endfor %}
+      </div>
 
-            {% with errors = get_flashed_messages(category_filter=["error"]) %}
-            {% for error in errors %}
-            <p id="error" style="color: red">{{ error }}</p>
-            {% endfor %}
-            {% endwith %}
+      <br />
+      <input type="submit" value="Confirm" style="margin-top: 1rem" />
 
-        </form>
-    </div>
+      {% with errors = get_flashed_messages(category_filter=["error"]) %} {% for error in errors %}
+      <p id="error" style="color: red">{{ error }}</p>
+      {% endfor %} {% endwith %}
+    </form>
+  </div>
 </div>
 
 {% endblock %}

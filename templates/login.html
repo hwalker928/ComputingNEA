@@ -7,18 +7,38 @@
     <form method="post" style="margin-top: 1rem">
       <label for="password">Encryption Master Key:</label>
       <br />
-      <input type="password" id="password" name="password" required class="large" autofocus/>
+      <input type="password" id="password" name="password" required class="large" autofocus />
 
-      {% with errors = get_flashed_messages(category_filter=["error"]) %}
-      {% for error in errors %}
+      {% with errors = get_flashed_messages(category_filter=["error"]) %} {% for error in errors %}
       <p id="error" style="color: red">{{ error }}</p>
-      {% endfor %}
-      {% endwith %}
+      {% endfor %} {% endwith %}
 
       <input type="submit" value="Validate" style="margin-top: 1rem" />
-
-
     </form>
   </div>
 </div>
+
+<script>
+  // Function to load the background colour from the cookie
+  function loadColour() {
+    console.log("Fetching colour from server");
+
+    // Fetch the colour from the server
+    fetch("/api/database/get?key=colour")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.value == null) {
+          console.log("No colour found in database, using default");
+          data.value = "white";
+        } else {
+          // Set the cookie to the colour
+          setCookie("colour", data.value);
+        }
+        console.log(`Server returned: ${data.value}`);
+
+        // Apply the colour to the background
+        document.body.style.backgroundColor = data.value;
+      });
+  }
+</script>
 {% endblock %}
