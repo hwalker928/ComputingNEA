@@ -1,5 +1,6 @@
 import sqlite3
 from typing import Any
+import datetime
 
 from utils import log
 from scripts import reset_db, init_db
@@ -67,8 +68,6 @@ class Database:
         # Execute the SQL query
         self.__cursor.execute(query, params)
 
-        self.commit()
-
         # Return all results from the query
         return self.__cursor.fetchall()
 
@@ -117,7 +116,7 @@ class Database:
         # Commit the changes to the database
         self.commit()
 
-    def get_all_credentials(self):
+    def get_all_credentials(self) -> list[Any]:
         log.debug("Getting all credentials")
 
         # Query to obtain all credentials
@@ -126,10 +125,48 @@ class Database:
         # Execute SQL query
         return self.query(query)
 
-    def update_last_used_at(self, credential_id: int):
+    def update_last_used_at(self, credential_id: int) -> None:
         log.debug(f"Updating last_used_at for credential ID {credential_id}")
 
         # Update the last_used_at column to be the current datetime for the specified credential by ID
         self.query(
             f"UPDATE credentials SET last_used_at = strftime('%Y-%m-%d %H:%M:%S', 'now') WHERE id = '{credential_id}'"
         )
+
+        # Commit the changes to the database
+        self.commit()
+
+    def insert_credential(
+        self,
+        name: str,
+        username: str,
+        password: str,
+        domain: str,
+        totp_secret: str,
+    ) -> int | None:
+        log.debug(f"Inserting credential for {name}")
+
+        # Query to insert a new credential
+        query = """
+        INSERT INTO credentials (name, username, password, domain, two_factor_id, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """
+
+        # Execute SQL query with parameters
+        self.query(
+            query,
+            (
+                name,
+                username,
+                password,
+                domain,
+                totp_secret,
+                datetime.datetime.now(),
+                datetime.datetime.now(),
+            ),
+        )
+
+        # Commit the changes to the database
+        self.commit()
+
+        return self.get_cursor().lastrowid

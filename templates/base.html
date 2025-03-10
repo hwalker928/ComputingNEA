@@ -59,6 +59,7 @@
     <div style="position: absolute; top: 10px; right: 10px">
       <!-- Redirect the user using href, and disable the button if the user is on the page currently -->
       <button onclick="window.location.href='/'" {% if request.path == '/' %}disabled{% endif %}>Home</button>
+      <button onclick="window.location.href='/new'" {% if request.path == '/new' %}disabled{% endif %}>Add New</button>
       <button onclick="window.location.href='/settings'" {% if request.path == '/settings' %}disabled{% endif %}>Settings</button>
       <button onclick="window.location.href='/logout'">Logout</button>
     </div>

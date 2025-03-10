@@ -1,10 +1,10 @@
 COLOUR_OPTIONS = [
-    "red",
-    "orange",
-    "yellow",
-    "aquamarine",
-    "blue",
-    "purple",
-    "pink",
-    "grey",
+    "lightcoral",
+    "lightgoldenrodyellow",
+    "lightyellow",
+    "palegreen",
+    "lightcyan",
+    "plum",
+    "lightpink",
+    "lightgrey",
 ]

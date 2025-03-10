@@ -76,6 +76,46 @@ def view_credential(id: int):
     )
 
 
+@app.route("/new", methods=["GET", "POST"])
+def new_credential():
+    if request.method == "GET":
+        return render_template("new.html", name=database.get_user_detail("name"))
+
+    # Get the form data
+    name = request.form.get("name")
+    username = request.form.get("username")
+    password = request.form.get("password")
+    domain = request.form.get("domain")
+    totp_secret = request.form.get("totp_secret")
+
+    # Check if the name passes validation
+    # TODO: validate all 5 inputs
+    # valid, error = validation.check_valid_name(name)
+    # if not valid:
+    #    flash(error, "error")
+    #    return redirect("/new")
+
+    # Load the keypair with the private key from the session
+    kp = encryption.KeyPair()
+    kp.load_existing_key_pair(session["private_key_password"])
+
+    # Create an encryption instance using the keypair
+    enc = encryption.Encryption(kp)
+
+    # Encrypt the password using the encryption instance
+    encrypted_password = enc.encrypt(password)
+
+    # Insert the new credential into the database
+    if not database.insert_credential(
+        name, username, encrypted_password, domain, totp_secret
+    ):
+        flash("Failed to insert credential", "error")
+        return redirect("/new")
+
+    # Redirect the user to the home page after the credential is saved
+    return redirect("/")
+
+
 @app.route("/setup-key", methods=["GET", "POST"])
 def setup_key_1():
     if request.method == "GET":

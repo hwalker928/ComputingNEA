@@ -1,0 +1,75 @@
+{% extends 'base.html' %} {% block content %}
+
+<style>
+  h2 {
+    padding: 2px;
+    margin: 0px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+  }
+
+  input {
+    width: 20%;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+</style>
+
+<div style="padding: 10px">
+  <h1>Hi, {{name}}!</h1>
+
+  {% with errors = get_flashed_messages(category_filter=["error"]) %} {% for error in errors %}
+  <p id="error" style="color: red">{{ error }}</p>
+  {% endfor %} {% endwith %}
+
+  <form method="post">
+    <div>
+      <h2>Name</h2>
+      <input type="text" id="name" name="name" placeholder="Website name" />
+
+      <h2>Username</h2>
+      <input type="text" id="username" name="username" placeholder="Username" />
+
+      <h2>Password</h2>
+      <input type="password" id="password" name="password" placeholder="Password" />
+      <button onclick="togglePasswordVisibility()" style="width: 40px; height: 40px">
+        <i data-lucide="eye" id="toggleIcon"></i>
+      </button>
+
+      <h2>Domain</h2>
+      <input type="text" id="domain" name="domain" placeholder="Website domain" />
+
+      <h2>2FA Secret Key (optional)</h2>
+      <input type="text" id="totp_secret" name="totp_secret" placeholder="2FA Secret Key" />
+    </div>
+    <button type="submit" style="height: 40px; margin-top: 20px; padding: 10px">Add</button>
+  </form>
+</div>
+
+<script>
+  // Create the lucide icons
+  lucide.createIcons();
+
+  function togglePasswordVisibility() {
+    var passwordInput = document.getElementById("password");
+    var toggleIcon = document.getElementById("toggleIcon");
+
+    // Check if the password is currently visible
+    if (passwordInput.type === "password") {
+      // Show password
+      toggleIcon.setAttribute("data-lucide", "eye-off");
+      passwordInput.type = "text";
+    } else {
+      // Hide password
+      toggleIcon.setAttribute("data-lucide", "eye");
+      passwordInput.type = "password";
+    }
+
+    // We have to call createIcons again else the changes won't be applied
+    lucide.createIcons();
+  }
+</script>
+{% endblock %}
