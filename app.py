@@ -302,7 +302,10 @@ def api_credential_totp(id: int):
 
     if credential[5] is not None:
         totp = pyotp.TOTP(credential[5])
-        totp_code = totp.now()
+        try:
+            totp_code = totp.now()
+        except:
+            return {"value": "Invalid 2FA secret provided."}
     else:
         totp_code = None
 
