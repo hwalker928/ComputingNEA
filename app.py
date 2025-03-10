@@ -218,6 +218,18 @@ def login_page():
     return redirect("/login")
 
 
+@app.route("/logout", methods=["GET"])
+def logout():
+    # Check if the user is logged in by checking if the private key password is set
+    if not "private_key_password" in session:
+        return redirect("/login")
+
+    # Clear the private key password from the session
+    session.pop("private_key_password", None)
+
+    return redirect("/login")
+
+
 @app.route("/api/database/get", methods=["GET"])
 def api_database_get():
     if not request.args.get("key", None):
@@ -267,7 +279,9 @@ def start_webview():
     # temporary to disable webview
     # return
     log.debug("Starting webview process")
-    webview.create_window("Password Manager", app, confirm_close=True)
+    webview.create_window(
+        "Password Manager", app, confirm_close=True, height=800, width=1200
+    )
     webview.start()
 
 
@@ -293,11 +307,11 @@ if __name__ == "__main__":
             # Log an error
             log.error("Failed to download Lucide icons")
 
-    webview_process = multiprocessing.Process(target=start_webview)
-    webview_process.start()
+    # webview_process = multiprocessing.Process(target=start_webview)
+    # webview_process.start()
 
     try:
-        # TODO: this: app.run(host="0.0.0.0", debug=True, use_reloader=False)
+        # app.run(debug=True, use_reloader=False)
         app.run(host="0.0.0.0", debug=True)
     except KeyboardInterrupt:
         pass

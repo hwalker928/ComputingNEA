@@ -3,3 +3,4 @@ pywebview
 pycryptodome
 Faker
 pyotp
+requests
