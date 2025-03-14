@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, request, session, flash
-import threading, multiprocessing
+import threading
 import pyotp.utils
 import webview
 import os
@@ -78,6 +78,10 @@ def view_credential(id: int):
 
 @app.route("/new", methods=["GET", "POST"])
 def new_credential():
+    # Check if the user is logged in by checking if the private key password is set
+    if not "private_key_password" in session:
+        return redirect("/login")
+
     if request.method == "GET":
         return render_template("new.html", name=database.get_user_detail("name"))
 
