@@ -92,11 +92,22 @@ def new_credential():
     domain = request.form.get("domain")
     totp_secret = request.form.get("totp_secret")
 
-    # TODO: validate all 5 inputs
-    # valid, error = validation.
-    # if not valid:
-    #    flash(error, "error")
-    #    return redirect("/new")
+    # Check against each validation function
+    for field, check in [
+        (name, validation.credential_check_valid_name),
+        (username, validation.credential_check_valid_username),
+        (password, validation.credential_check_valid_password),
+        (domain, validation.credential_check_valid_domain),
+        (totp_secret, validation.credential_check_valid_totp_secret),
+    ]:
+        # Run the check with the field passed as a parameter
+        valid, error = check(field)
+
+        # If the validation fails
+        if not valid:
+            # Render the error to the user, and redirect back to the new credential page
+            flash(error, "error")
+            return redirect("/new")
 
     # Load the keypair with the private key from the session
     kp = encryption.KeyPair()
