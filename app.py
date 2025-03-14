@@ -88,9 +88,8 @@ def new_credential():
     domain = request.form.get("domain")
     totp_secret = request.form.get("totp_secret")
 
-    # Check if the name passes validation
     # TODO: validate all 5 inputs
-    # valid, error = validation.check_valid_name(name)
+    # valid, error = validation.
     # if not valid:
     #    flash(error, "error")
     #    return redirect("/new")
