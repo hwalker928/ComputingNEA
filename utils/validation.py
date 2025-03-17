@@ -116,13 +116,9 @@ def credential_check_valid_domain(domain: str) -> Tuple[bool, str | None]:
 
 
 def credential_check_valid_totp_secret(totp_secret: str) -> Tuple[bool, str | None]:
-    # Check if no TOTP secret was provided
+    # Check if no TOTP secret was provided, this is optional
     if not totp_secret:
-        return (False, "TOTP secret cannot be empty")
-
-    # Check if the TOTP secret is at least 16 characters long
-    if len(totp_secret) < 16:
-        return (False, "TOTP secret must be at least 16 characters long")
+        return (True, None)
 
     # Check if the secret key can generate a TOTP code
     totp = pyotp.TOTP(totp_secret)
