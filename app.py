@@ -327,6 +327,22 @@ def api_credential_totp(id: int):
     return {"value": totp_code}
 
 
+@app.route("/api/credential/<id>/delete", methods=["DELETE"])
+def api_credential_delete(id: int):
+    # Check the user is authenticated
+    if not "private_key_password" in session:
+        return redirect("/login")
+
+    # Delete the credential from the database using the ID
+    database.query(f"DELETE FROM credentials WHERE id = '{id}'")
+
+    # Commit the changes to the database
+    database.commit()
+
+    # Return a success status code
+    return "", 200
+
+
 @app.errorhandler(500)
 def internal_error(error):
     return render_template("500.html", error=error), 500

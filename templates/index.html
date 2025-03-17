@@ -14,7 +14,7 @@
   <div>
     <table>
       <tr>
-        <th>ID</th>
+        <th></th>
         <th>Service</th>
         <th>Username</th>
         <th>Domain</th>
@@ -23,7 +23,7 @@
       </tr>
       {% for credential in credentials %}
       <tr>
-        <td>{{ credential[0] }}</td>
+        <td>{{ loop.index }}</td>
         <td>{{ credential[1] }}</td>
         <td>{{ credential[2] }}</td>
         <td>{{ credential[4] }}</td>
