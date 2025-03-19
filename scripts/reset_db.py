@@ -8,6 +8,8 @@ def reset():
         os.remove("keys/private.key")
     if os.path.exists("keys/public.key"):
         os.remove("keys/public.key")
+    if os.path.exists("static/js/imports/lucide.min.js"):
+        os.remove("static/js/imports/lucide.min.js")
 
 
 if __name__ == "__main__":
