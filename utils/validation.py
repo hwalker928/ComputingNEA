@@ -72,9 +72,9 @@ def credential_check_valid_name(name: str) -> Tuple[bool, str | None]:
     if len(name) < 3:
         return (False, "Name must be at least 3 characters long")
 
-    # Check if the name is no longer than 16 characters
-    if len(name) > 16:
-        return (False, "Name cannot be more than 16 characters long")
+    # Check if the name is no longer than 32 characters
+    if len(name) > 32:
+        return (False, "Name cannot be more than 32 characters long")
 
     return (True, None)
 

@@ -76,6 +76,83 @@ def view_credential(id: int):
     )
 
 
+@app.route("/edit/<id>", methods=["GET", "POST"])
+def edit_credential(id: int):
+    # Check if the user is logged in by checking if the private key password is set
+    if not "private_key_password" in session:
+        return redirect("/login")
+
+    # Find the credential in the database using the ID
+    credential = database.query(f"SELECT * FROM credentials WHERE id = '{id}'")
+
+    # Check that a credential was found by the ID
+    if not len(credential) == 1:
+        print("An invalid ID was requested.")
+        pass
+
+    # Since we only want the first result, index the array with 0
+    credential = credential[0]
+
+    # Update the last_used_at column to reflect the viewing action
+    database.update_last_used_at(id)
+
+    # Load the keypair with the private key from the session
+    kp = encryption.KeyPair()
+    kp.load_existing_key_pair(session["private_key_password"])
+
+    # Create an encryption instance using the keypair
+    enc = encryption.Encryption(kp)
+
+    if request.method == "GET":
+        # Decrypt the encrypted password with the encryption instance, and then decode it using UTF-8
+        password = enc.decrypt(credential[3]).decode()
+
+        # Return the view, with the credential and decoded password
+        return render_template(
+            "edit.html",
+            name=database.get_user_detail("name"),
+            credential=credential,
+            password=password,
+        )
+
+    # Get the form data
+    name = request.form.get("name")
+    username = request.form.get("username")
+    password = request.form.get("password")
+    domain = request.form.get("domain")
+    totp_secret = request.form.get("totp_secret")
+
+    # Check against each validation function
+    for field, check in [
+        (name, validation.credential_check_valid_name),
+        (username, validation.credential_check_valid_username),
+        (password, validation.credential_check_valid_password),
+        (domain, validation.credential_check_valid_domain),
+        (totp_secret, validation.credential_check_valid_totp_secret),
+    ]:
+        # Run the check with the field passed as a parameter
+        valid, error = check(field)
+
+        # If the validation fails
+        if not valid:
+            # Render the error to the user, and redirect back to the new credential page
+            flash(error, "error")
+            return redirect(f"/edit/{id}")
+
+    # Encrypt the password using the encryption instance
+    encrypted_password = enc.encrypt(password)
+
+    # Update the credential in the database
+    if not database.update_credential(
+        id, name, username, encrypted_password, domain, totp_secret
+    ):
+        flash("Failed to update credential", "error")
+        return redirect(f"/edit/{id}")
+
+    # Redirect the user to the credential view page after the credential is updated
+    return redirect(f"/view/{id}")
+
+
 @app.route("/new", methods=["GET", "POST"])
 def new_credential():
     # Check if the user is logged in by checking if the private key password is set

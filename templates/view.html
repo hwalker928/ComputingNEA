@@ -41,7 +41,11 @@
   <h1>Hi, {{name}}!</h1>
 
   <div>
-    <h2>{{ credential[1] }}</h2>
+    <h2>Viewing: {{ credential[1] }}</h2>
+
+    {% with errors = get_flashed_messages(category_filter=["error"]) %} {% for error in errors %}
+    <p id="error" style="color: red">{{ error }}</p>
+    {% endfor %} {% endwith %}
 
     <input type="hidden" id="id" value="{{ credential[0] }}" />
 

@@ -148,7 +148,7 @@ class Database:
 
         # Query to insert a new credential
         query = """
-        INSERT INTO credentials (name, username, password, domain, two_factor_id, created_at, updated_at)
+        INSERT INTO credentials (name, username, password, domain, totp_secret, created_at, updated_at)
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """
 
@@ -170,3 +170,41 @@ class Database:
         self.commit()
 
         return self.get_cursor().lastrowid
+
+    def update_credential(
+        self,
+        credential_id: int,
+        name: str,
+        username: str,
+        password: str,
+        domain: str,
+        totp_secret: str,
+    ) -> bool:
+        log.debug(f"Updating credential for ID {credential_id}")
+
+        # Query to update the credential
+        query = """
+        UPDATE credentials
+        SET name = ?, username = ?, password = ?, domain = ?, totp_secret = ?, updated_at = ?
+        WHERE id = ?
+        """
+
+        # Execute SQL query with parameters
+        self.query(
+            query,
+            (
+                name,
+                username,
+                password,
+                domain,
+                totp_secret,
+                datetime.datetime.now(),
+                credential_id,
+            ),
+        )
+
+        # Commit the changes to the database
+        self.commit()
+
+        # Return True if the update was successful
+        return True
