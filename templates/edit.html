@@ -41,8 +41,7 @@
         <input type="text" id="domain" name="domain" placeholder="Website domain" value="{{ credential[4] }}" />
 
         <h2>2FA Secret Key (optional)</h2>
-        <input type="text" id="totp_secret" name="totp_secret" placeholder="2FA Secret Key" value="{{ credential[5] }}" />
-        <!-- <input type="text" id="totp_secret" name="totp_secret" placeholder="2FA Secret Key" value="{{ credential[5] or '' }}" /> -->
+        <input type="text" id="totp_secret" name="totp_secret" placeholder="2FA Secret Key" value="{{ credential[5] or '' }}" />
       </div>
       <button type="submit" style="height: 40px; margin-top: 20px; padding: 10px">Save Changes</button>
     </form>
