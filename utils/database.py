@@ -146,6 +146,10 @@ class Database:
     ) -> int | None:
         log.debug(f"Inserting credential for {name}")
 
+        # Add a check to ensure that an empty string is converted to None
+        if totp_secret == "":
+            totp_secret = None
+
         # Query to insert a new credential
         query = """
         INSERT INTO credentials (name, username, password, domain, totp_secret, created_at, updated_at)
@@ -181,6 +185,10 @@ class Database:
         totp_secret: str,
     ) -> bool:
         log.debug(f"Updating credential for ID {credential_id}")
+
+        # Add a check to ensure that an empty string is converted to None
+        if totp_secret == "":
+            totp_secret = None
 
         # Query to update the credential
         query = """
